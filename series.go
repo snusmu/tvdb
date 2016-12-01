@@ -75,7 +75,7 @@ type SeriesEpisode struct {
 	AiredEpisodeNumber uint    `json:"airedEpisodeNumber"`
 	AiredSeason        uint    `json:"airedSeason"`
 	DVDEpisodeNumber   float32 `json:"dvdEpisodeNumber"`
-	DVDSeason          uint    `json:"dvdSeason"`
+	DVDSeason          float32 `json:"dvdSeason"`
 	Name               string  `json:"episodeName"`
 	ID                 uint64  `json:"id"`
 	Overview           string  `json:"overview"`
