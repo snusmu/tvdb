@@ -23,8 +23,8 @@ type Episode struct {
 	LastUpdated       int64   `json:"lastUpdated"`
 	DVDDiscID         string  `json:"dvdDiscid"`
 	DVDSeason         uint    `json:"dvdSeason"`
-	DVDEpisodeNumber  uint    `json:"dvdEpisodeNumber"`
-	DVDChapter        uint    `json:"dvdChapter"`
+	DVDEpisodeNumber  float32 `json:"dvdEpisodeNumber"`
+	DVDChapter        float32 `json:"dvdChapter"`
 	AbsoluteNumber    uint    `json:"absoluteNumber"`
 	Filename          string  `json:"filename"`
 	SeriesID          uint64  `json:"seriesId"`
