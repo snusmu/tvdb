@@ -170,7 +170,7 @@ type Summary struct {
 }
 
 // SeriesSummary returns the summary information about episodes for a tv show
-func (c *Conn) SeriesSummary(id uint) (*Summary, error) {
+func (c *Conn) SeriesSummary(id uint64) (*Summary, error) {
 	var r struct {
 		Data  *Summary      `json:"data"`
 		Error requestErrors `json:"error"`
