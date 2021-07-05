@@ -1,10 +1,11 @@
 // Package tvdb is a simple interface to the TVDB database of TV shows
-package tvdb
+package tvdb // import "vimagination.zapto.org/tvdb"
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -15,8 +16,8 @@ import (
 // token.
 type Auth struct {
 	APIKey   string `json:"apikey"`
-	Username string `json:"username"`
-	UserKey  string `json:"userkey"`
+	Username string `json:"username,omitempty"`
+	UserKey  string `json:"userkey,omitempty"`
 }
 
 type authResponse struct {
@@ -57,7 +58,6 @@ func Token(t string) *Conn {
 
 // Login creates a TVDB database connection using login credentials
 func Login(a Auth) (*Conn, error) {
-
 	c := &Conn{
 		headers: loginHeaders,
 	}
@@ -137,10 +137,6 @@ func (c *Conn) delete(u *url.URL, ret interface{}) error {
 	return c.do(http.MethodDelete, u, nil, ret, nil)
 }
 
-func (c *Conn) head(u *url.URL, headers http.Header) error {
-	return c.do(http.MethodHead, u, nil, nil, headers)
-}
-
 func (c *Conn) do(method string, u *url.URL, data interface{}, ret interface{}, headers http.Header) error {
 	r := http.Request{
 		URL:    u,
@@ -160,7 +156,7 @@ func (c *Conn) do(method string, u *url.URL, data interface{}, ret interface{}, 
 	resp, err := http.DefaultClient.Do(&r)
 	c.headerMutex.RUnlock()
 	if err != nil {
-		return err
+		return fmt.Errorf("error making connection: %w", err)
 	}
 
 	switch resp.StatusCode {
@@ -175,9 +171,11 @@ func (c *Conn) do(method string, u *url.URL, data interface{}, ret interface{}, 
 
 	if ret != nil {
 		if err = json.NewDecoder(resp.Body).Decode(ret); err != nil {
-			return err
+			return fmt.Errorf("error decoding response: %w", err)
 		}
-		resp.Body.Close()
+		if err = resp.Body.Close(); err != nil {
+			return fmt.Errorf("error closing response body: %w", err)
+		}
 	}
 
 	for k := range headers {

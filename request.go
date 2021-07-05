@@ -1,6 +1,9 @@
 package tvdb
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type requestErrors struct {
 	InvalidFilters     ErrInvalidFilters     `json:"invalidFilters"`
@@ -22,7 +25,7 @@ func (ErrInvalidFilters) Error() string {
 func (ErrInvalidFilters) UnmarshalJSON(b []byte) error {
 	var e []string
 	if err := json.Unmarshal(b, &e); err != nil {
-		return err
+		return fmt.Errorf("error decoding Invalid Filters error: %w", err)
 	} else if len(e) > 0 {
 		return ErrInvalidFilters(e)
 	}
@@ -43,7 +46,7 @@ func (ErrInvalidLanguage) Error() string {
 func (ErrInvalidLanguage) UnmarshalJSON(b []byte) error {
 	var e string
 	if err := json.Unmarshal(b, &e); err != nil {
-		return err
+		return fmt.Errorf("error decoding Invalid Language error: %w", err)
 	} else if len(e) > 0 {
 		return ErrInvalidLanguage(e)
 	}
@@ -64,7 +67,7 @@ func (ErrInvalidQueryParams) Error() string {
 func (ErrInvalidQueryParams) UnmarshalJSON(b []byte) error {
 	var e []string
 	if err := json.Unmarshal(b, &e); err != nil {
-		return err
+		return fmt.Errorf("error decoding Invalid Query Params error: %w", err)
 	} else if len(e) > 0 {
 		return ErrInvalidQueryParams(e)
 	}
